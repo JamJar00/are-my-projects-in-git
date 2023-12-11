@@ -14,7 +14,7 @@ Checks:
 ## Usage
 The 'just show me the results for my current directory' way:
 ```bash
-wget https://raw.githubusercontent.com/JamJar00/are-my-projects-in-git/main/are-my-projects-in-git.py -O - -q | python3 - .
+wget https://go.jread.dev/are-my-projects-in-git -O - -q | python3 - .
 ```
 
 Or the more permanent, 'maybe I want a local copy of this project' way:
