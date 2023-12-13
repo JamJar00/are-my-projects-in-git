@@ -34,30 +34,33 @@ def is_unpushed_changes(path):
 
 
 def test(path, name):
+    print(name.ljust(32), end='')
     if is_git_project(path):
-        print(f"{name.ljust(32)} is using git {TICK_EMOJI}")
+        print(TICK_EMOJI, end='    ')
         if is_unstaged_changes(path):
-            print(f"{name.ljust(32)} has unstaged changes {CROSS_EMOJI}")
+            print(CROSS_EMOJI, end='    ')
+            print("--", end='    ');
         else:
-            print(f"{name.ljust(32)} has no unstaged changes {TICK_EMOJI}")
+            print(TICK_EMOJI, end='    ')
 
             # TODO make work if there are unstaged changes and then deindent
             if is_untracked_files(path):
-                print(f"{name.ljust(32)} has untracked files {CROSS_EMOJI}")
+                print(CROSS_EMOJI, end='    ')
             else:
-                print(f"{name.ljust(32)} has no untracked files {TICK_EMOJI}")
+                print(TICK_EMOJI, end='    ')
 
         if is_missing_remote(path):
-            print(f"{name.ljust(32)} has no remote {CROSS_EMOJI}")
+            print(CROSS_EMOJI, end='    ')
+            print("--", end='    ');
         else:
-            print(f"{name.ljust(32)} has a remote {TICK_EMOJI}")
+            print(TICK_EMOJI, end='    ')
 
             if is_unpushed_changes(path):
-                print(f"{name.ljust(32)} has unpushed changes {CROSS_EMOJI}")
+                print(CROSS_EMOJI, end='    ')
             else:
-                print(f"{name.ljust(32)} has no unpushed changes {TICK_EMOJI}")
+                print(TICK_EMOJI, end='    ')
     else:
-        print(f"{name.ljust(32)} is not using git {CROSS_EMOJI}")
+        print(CROSS_EMOJI, end='    ')
     print()
 
 
@@ -65,6 +68,16 @@ parser = argparse.ArgumentParser()
 parser.add_argument('root_directory')
 args = parser.parse_args()
 print("Scanning " + args.root_directory)
+
+print((" " * 32) + "            U")
+print((" " * 32) + "      U     n           U")
+print((" " * 32) + "      n C   t     M     n C")
+print((" " * 32) + "      s h   r     i R   s h")
+print((" " * 32) + "      t a   a F   s e   t a")
+print((" " * 32) + "U     a n   c i   s m   a n")
+print((" " * 32) + "s G   g g   k l   i o   g g")
+print((" " * 32) + "e i   e e   e e   n t   e e")
+print((" " * 32) + "s t   d s   d s   g e   d s")
 
 if is_git_project(args.root_directory):
     test(args.root_directory, os.path.basename(os.path.abspath(args.root_directory)))
