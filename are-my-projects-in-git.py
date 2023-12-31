@@ -37,6 +37,10 @@ def test(path, name):
     print(name.ljust(32), end='')
     if is_git_project(path):
         print(TICK_EMOJI, end='    ')
+
+        # Running a git status seems to help make the following commands more accurate
+        subprocess.run(["git", "-C", path, "status"], capture_output=True)
+
         if is_unstaged_changes(path):
             print(CROSS_EMOJI, end='    ')
             print("  ", end='    ');
