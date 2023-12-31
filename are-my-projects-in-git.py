@@ -39,7 +39,7 @@ def test(path, name):
         print(TICK_EMOJI, end='    ')
         if is_unstaged_changes(path):
             print(CROSS_EMOJI, end='    ')
-            print("--", end='    ');
+            print("  ", end='    ');
         else:
             print(TICK_EMOJI, end='    ')
 
@@ -51,7 +51,7 @@ def test(path, name):
 
         if is_missing_remote(path):
             print(CROSS_EMOJI, end='    ')
-            print("--", end='    ');
+            print("  ", end='    ');
         else:
             print(TICK_EMOJI, end='    ')
 
