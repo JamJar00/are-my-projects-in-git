@@ -6,6 +6,7 @@ import subprocess
 
 TICK_EMOJI = "\U00002705"
 CROSS_EMOJI = "\U0000274C"
+WARN_EMOJI = "\U000026A0\U0000FE0F"
 
 
 def is_git_project(path):
@@ -42,25 +43,25 @@ def test(path, name):
         subprocess.run(["git", "-C", path, "status"], capture_output=True)
 
         if is_unstaged_changes(path):
-            print(CROSS_EMOJI, end='    ')
+            print(WARN_EMOJI, end='    ')
             print("  ", end='    ');
         else:
             print(TICK_EMOJI, end='    ')
 
             # TODO make work if there are unstaged changes and then deindent
             if is_untracked_files(path):
-                print(CROSS_EMOJI, end='    ')
+                print(WARN_EMOJI, end='    ')
             else:
                 print(TICK_EMOJI, end='    ')
 
         if is_missing_remote(path):
-            print(CROSS_EMOJI, end='    ')
+            print(WARN_EMOJI, end='    ')
             print("  ", end='    ');
         else:
             print(TICK_EMOJI, end='    ')
 
             if is_unpushed_changes(path):
-                print(CROSS_EMOJI, end='    ')
+                print(WARN_EMOJI, end='    ')
             else:
                 print(TICK_EMOJI, end='    ')
     else:
@@ -73,11 +74,11 @@ parser.add_argument('root_directory')
 args = parser.parse_args()
 print("Scanning " + args.root_directory)
 
-print((" " * 14) + "Unpushed Changes ━━━━━━━━━━━━━━━━━━━━━━━━━┓")
-print((" " * 14) + "      Has Remote ━━━━━━━━━━━━━━━━━━━┓     ┃")
-print((" " * 14) + " Untracked Files ━━━━━━━━━━━━━┓     ┃     ┃")
-print((" " * 14) + "Unstaged Changes ━━━━━━━┓     ┃     ┃     ┃")
-print((" " * 14) + "        Uses Git ━┓     ┃     ┃     ┃     ┃")
+print((" " * 11) + "No Unpushed Changes ━━━━━━━━━━━━━━━━━━━━━━━━━┓")
+print((" " * 11) + "         Has Remote ━━━━━━━━━━━━━━━━━━━┓     ┃")
+print((" " * 11) + " No Untracked Files ━━━━━━━━━━━━━┓     ┃     ┃")
+print((" " * 11) + "No Unstaged Changes ━━━━━━━┓     ┃     ┃     ┃")
+print((" " * 11) + "           Uses Git ━┓     ┃     ┃     ┃     ┃")
 
 if is_git_project(args.root_directory):
     test(args.root_directory, os.path.basename(os.path.abspath(args.root_directory)))
