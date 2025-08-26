@@ -34,7 +34,10 @@ def is_unpushed_changes(path):
     return res.returncode != 0 or len(res.stdout.strip()) != 0
 
 
-def test(path, name, start_column):
+def test(path, name, start_column, background):
+    if background:
+        print("\033[30;47m", end='')
+
     print(name.ljust(start_column), end='')
     if is_git_project(path):
         print(TICK_EMOJI, end='    ')
@@ -66,6 +69,8 @@ def test(path, name, start_column):
                 print(TICK_EMOJI, end='    ')
     else:
         print(CROSS_EMOJI, end='    ')
+    if background:
+        print("\033[m", end='')
     print()
 
 
@@ -87,11 +92,13 @@ if is_git_project(args.root_directory):
     directory = os.path.basename(os.path.abspath(args.root_directory))
     left_padding = len(directory) + 4
     print_header(left_padding)
-    test(args.root_directory, directory, left_padding)
+    test(args.root_directory, directory, left_padding, False)
 else:
     directories = [ item for item in os.listdir(args.root_directory) if os.path.isdir(os.path.join(args.root_directory, item)) ]
     left_padding = max(len(directory) for directory in directories) + 4
     print_header(left_padding)
+    background = False
     for directory in directories:
         full_path = os.path.join(args.root_directory, directory)
-        test(full_path, directory, left_padding)
+        test(full_path, directory, left_padding, background)
+        background = not background
