@@ -34,8 +34,8 @@ def is_unpushed_changes(path):
     return res.returncode != 0 or len(res.stdout.strip()) != 0
 
 
-def test(path, name):
-    print(name.ljust(32), end='')
+def test(path, name, start_column):
+    print(name.ljust(start_column), end='')
     if is_git_project(path):
         print(TICK_EMOJI, end='    ')
 
@@ -69,21 +69,29 @@ def test(path, name):
     print()
 
 
+def print_header(start_column: int) -> None:
+    start_column -= 21
+    print((" " * start_column) + "No Unpushed Changes ━━━━━━━━━━━━━━━━━━━━━━━━━┓")
+    print((" " * start_column) + "         Has Remote ━━━━━━━━━━━━━━━━━━━┓     ┃")
+    print((" " * start_column) + " No Untracked Files ━━━━━━━━━━━━━┓     ┃     ┃")
+    print((" " * start_column) + "No Unstaged Changes ━━━━━━━┓     ┃     ┃     ┃")
+    print((" " * start_column) + "           Uses Git ━┓     ┃     ┃     ┃     ┃")
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument('root_directory')
 args = parser.parse_args()
 print("Scanning " + args.root_directory)
 
-print((" " * 11) + "No Unpushed Changes ━━━━━━━━━━━━━━━━━━━━━━━━━┓")
-print((" " * 11) + "         Has Remote ━━━━━━━━━━━━━━━━━━━┓     ┃")
-print((" " * 11) + " No Untracked Files ━━━━━━━━━━━━━┓     ┃     ┃")
-print((" " * 11) + "No Unstaged Changes ━━━━━━━┓     ┃     ┃     ┃")
-print((" " * 11) + "           Uses Git ━┓     ┃     ┃     ┃     ┃")
-
 if is_git_project(args.root_directory):
-    test(args.root_directory, os.path.basename(os.path.abspath(args.root_directory)))
+    directory = os.path.basename(os.path.abspath(args.root_directory))
+    left_padding = len(directory) + 4
+    print_header(left_padding)
+    test(args.root_directory, directory, left_padding)
 else:
     directories = [ item for item in os.listdir(args.root_directory) if os.path.isdir(os.path.join(args.root_directory, item)) ]
+    left_padding = max(len(directory) for directory in directories) + 4
+    print_header(left_padding)
     for directory in directories:
         full_path = os.path.join(args.root_directory, directory)
-        test(full_path, directory)
+        test(full_path, directory, left_padding)
