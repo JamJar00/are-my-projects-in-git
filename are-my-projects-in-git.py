@@ -101,12 +101,12 @@ print("Scanning " + args.root_directory)
 
 if is_git_project(args.root_directory):
     directory = os.path.basename(os.path.abspath(args.root_directory))
-    left_padding = len(directory) + 4
+    left_padding = max(len(directory) + 4, 21)
     print_header(left_padding)
     test(args.root_directory, directory, left_padding, False)
 else:
     directories = [ item for item in os.listdir(args.root_directory) if os.path.isdir(os.path.join(args.root_directory, item)) ]
-    left_padding = max(len(directory) for directory in directories) + 4
+    left_padding = max(max(len(directory) for directory in directories) + 4, 21)
     print_header(left_padding)
     background = False
     for directory in directories:
