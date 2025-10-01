@@ -24,6 +24,11 @@ def is_untracked_files(path):
     return len(res.stdout.strip()) != 0
 
 
+def is_stashed_changes(path):
+    res = subprocess.run(["git", "-C", path, "stash", "list"], capture_output=True)
+    return res.returncode != 0 or len(res.stdout.strip()) != 0
+
+
 def is_missing_remote(path):
     res = subprocess.run(["git", "-C", path, "remote", "get-url", "origin"], capture_output=True)
     return res.returncode != 0
@@ -57,6 +62,11 @@ def test(path, name, start_column, background):
             else:
                 print(TICK_EMOJI, end='    ')
 
+        if is_stashed_changes(path):
+            print(WARN_EMOJI, end='    ')
+        else:
+            print(TICK_EMOJI, end='    ')
+
         if is_missing_remote(path):
             print(WARN_EMOJI, end='    ')
             print("  ", end='    ');
@@ -76,11 +86,12 @@ def test(path, name, start_column, background):
 
 def print_header(start_column: int) -> None:
     start_column -= 21
-    print((" " * start_column) + "No Unpushed Changes ━━━━━━━━━━━━━━━━━━━━━━━━━┓")
-    print((" " * start_column) + "         Has Remote ━━━━━━━━━━━━━━━━━━━┓     ┃")
-    print((" " * start_column) + " No Untracked Files ━━━━━━━━━━━━━┓     ┃     ┃")
-    print((" " * start_column) + "No Unstaged Changes ━━━━━━━┓     ┃     ┃     ┃")
-    print((" " * start_column) + "           Uses Git ━┓     ┃     ┃     ┃     ┃")
+    print((" " * start_column) + "No Unpushed Changes ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓")
+    print((" " * start_column) + "         Has Remote ━━━━━━━━━━━━━━━━━━━━━━━━━┓     ┃")
+    print((" " * start_column) + " No Stashed Changes ━━━━━━━━━━━━━━━━━━━┓     ┃     ┃")
+    print((" " * start_column) + " No Untracked Files ━━━━━━━━━━━━━┓     ┃     ┃     ┃")
+    print((" " * start_column) + "No Unstaged Changes ━━━━━━━┓     ┃     ┃     ┃     ┃")
+    print((" " * start_column) + "           Uses Git ━┓     ┃     ┃     ┃     ┃     ┃")
 
 
 parser = argparse.ArgumentParser()
